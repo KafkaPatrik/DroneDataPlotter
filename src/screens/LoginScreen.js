@@ -104,8 +104,7 @@ const styles = StyleSheet.create({
     fontSize: 34,
     fontWeight: 'bold',
     marginBottom: 5,
-    alignItems: 'left',
-    justifyContent: 'left',
+    alignSelf: 'flex-start',
   },
   subtitle: {
     fontSize: 18,
