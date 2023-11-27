@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
 import { getDatabase, ref, onValue, push } from "firebase/database";
-import { SvgUri } from 'react-native-svg';
+
 
 const HomeScreen = ({ navigation }) => {
   const [droneMAC, setDroneMAC] = useState('');
