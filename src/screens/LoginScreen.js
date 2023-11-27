@@ -4,6 +4,7 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { FIREBASE_AUTH } from '../../Firebase/Firebase';
 import { StatusBar } from 'expo-status-bar';
+import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -44,8 +45,17 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Drone Plot</Text>
-      <Text style={styles.subtitle}>Real-Time Drone Insights</Text>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Drone Plot</Text>
+        <Text style={styles.subtitle}>Real-Time Drone Insights</Text>
+      </View>
+      <View style={styles.iconContainer}>
+        <MaterialCommunityIcons name="quadcopter" size={160} color="black" />
+      </View>
+      <View>
+        <Text style={styles.titleLogin}>Login</Text>
+      </View>
+  
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -80,15 +90,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
   },
+  titleContainer: {
+    width: '80%',
+    alignItems: 'center',
+    marginBottom: 30,
+  },
   title: {
-    fontSize: 38,
+    fontSize: 44,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 5,
+  },
+  titleLogin: {
+    fontSize: 34,
+    fontWeight: 'bold',
+    marginBottom: 5,
+    alignItems: 'left',
+    justifyContent: 'left',
   },
   subtitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 50,
+    marginBottom: 10,
   },
   input: {
     width: '80%',
@@ -113,6 +135,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+  iconContainer:{
+    marginBottom: 20,
+  }
 });
 
 export default LoginScreen;
