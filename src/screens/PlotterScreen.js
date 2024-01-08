@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { Dimensions } from 'react-native';
-import { Accelerometer } from 'expo-sensors';  // Import Accelerometer
+import { Accelerometer } from 'expo-sensors';  
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -10,20 +10,24 @@ const Plotter = ({ route }) => {
   const { selectedMAC } = route.params;
 
   const initialData = {
-    labels: ['0.0', '0.2', '0.4', '0.6', '0.8', '1'],
     datasets: [
       {
-        data: [],  // Initialize with empty array for accelerometer data
-        color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // line color
-        strokeWidth: 6, // line width
+        data: [150, 200, 350, 450, 600, 500],  
+        color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`, 
+        strokeWidth: 6, 
       },
       {
-        data: [150, 200, 350, 450, 600, 500],
-        color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`, // line color
-        strokeWidth: 6, // line width
+        data: [200, 200, 350, 450, 600, 500], 
+        color: (opacity = 1) => `rgba(0, 255, 0, ${opacity})`, 
+        strokeWidth: 6, 
+      },
+      {
+        data: [300, 200, 350, 450, 600, 500], 
+        color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`, 
+        strokeWidth: 6, 
       },
     ],
-    legend: ['Accelerometer', 'ETH'],
+    legend: ['X', 'Y', 'Z'],
   };
 
   const [data, setData] = useState(initialData);
@@ -41,13 +45,17 @@ const Plotter = ({ route }) => {
             },
             {
               ...prevData.datasets[1],
-              data: [...prevData.datasets[1].data.slice(1), y],  // Use y-axis value for another line (you can change this)
+              data: [...prevData.datasets[1].data.slice(1), y],  // Use y-axis value for another line 
+            },
+            {
+              ...prevData.datasets[2],
+              data: [...prevData.datasets[1].data.slice(1), z],  // Use z-axis value for another line 
             },
           ],
         }));
       });
 
-      await Accelerometer.setUpdateInterval(1000); // Set the update interval (adjust as needed)
+      await Accelerometer.setUpdateInterval(500); // Set the update interval 
     };
 
     subscribeToAccelerometer();
@@ -63,11 +71,8 @@ const Plotter = ({ route }) => {
       <Text style={styles.subtitle}>Selected MAC: {selectedMAC}</Text>
       <LineChart
         data={data}
-        width={Dimensions.get('window').width} // from react-native
-        height={Dimensions.get('window').height - 195}
-        yAxisLabel="$"
-        yAxisSuffix="s"
-        xAxisSuffix="s"
+        width={Dimensions.get('window').width} 
+        height={Dimensions.get('window').height - 230}
         yAxisInterval={1}
         chartConfig={{
           fillShadowGradientTo: null,
