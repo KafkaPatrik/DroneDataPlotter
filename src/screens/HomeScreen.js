@@ -27,10 +27,11 @@ const HomeScreen = ({ navigation }) => {
       setDroneMAC('');
     }
   };
-
+  
   const handleSelectMAC = (selectedMAC) => {
     navigation.navigate('Plotter', { selectedMAC });
   };
+
 
   return (
     <View style={styles.container}>
