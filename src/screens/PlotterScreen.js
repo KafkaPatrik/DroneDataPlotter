@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { Dimensions } from 'react-native';
+import { Accelerometer } from 'expo-sensors';  // Import Accelerometer
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -12,7 +13,7 @@ const Plotter = ({ route }) => {
     labels: ['0.0', '0.2', '0.4', '0.6', '0.8', '1'],
     datasets: [
       {
-        data: [100, 250, 300, 400, 10, 600],
+        data: [],  // Initialize with empty array for accelerometer data
         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // line color
         strokeWidth: 6, // line width
       },
@@ -22,30 +23,39 @@ const Plotter = ({ route }) => {
         strokeWidth: 6, // line width
       },
     ],
+    legend: ['Accelerometer', 'ETH'],
   };
 
   const [data, setData] = useState(initialData);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const newDataPointBitcoin = Math.floor(Math.random() * 100);
-      const newDataPointETH = Math.floor(Math.random() * 100);
-      setData((prevData) => ({
-        ...prevData,
-        datasets: [
-          {
-            ...prevData.datasets[0],
-            data: [...prevData.datasets[0].data.slice(1), newDataPointBitcoin],
-          },
-          {
-            ...prevData.datasets[1],
-            data: [...prevData.datasets[1].data.slice(1), newDataPointETH],
-          },
-        ],
-      }));
-    }, 1000);
+    const subscribeToAccelerometer = async () => {
+      Accelerometer.addListener(({ x, y, z }) => {
+        // Update the state with the new accelerometer data
+        setData((prevData) => ({
+          ...prevData,
+          datasets: [
+            {
+              ...prevData.datasets[0],
+              data: [...prevData.datasets[0].data.slice(1), x],  // Use x-axis value for accelerometer data
+            },
+            {
+              ...prevData.datasets[1],
+              data: [...prevData.datasets[1].data.slice(1), y],  // Use y-axis value for another line (you can change this)
+            },
+          ],
+        }));
+      });
 
-    return () => clearInterval(interval);
+      await Accelerometer.setUpdateInterval(1000); // Set the update interval (adjust as needed)
+    };
+
+    subscribeToAccelerometer();
+
+    // Cleanup function
+    return () => {
+      Accelerometer.removeAllListeners();
+    };
   }, []);
 
   return (
@@ -53,8 +63,8 @@ const Plotter = ({ route }) => {
       <Text style={styles.subtitle}>Selected MAC: {selectedMAC}</Text>
       <LineChart
         data={data}
-        width={screenWidth}
-        height={300}
+        width={Dimensions.get('window').width} // from react-native
+        height={Dimensions.get('window').height - 195}
         yAxisLabel="$"
         yAxisSuffix="s"
         xAxisSuffix="s"
@@ -89,7 +99,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   subtitle: {
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: 'bold',
     marginBottom: 10,
   },
